@@ -1,0 +1,75 @@
+#include <DHT.h>
+#include <LiquidCrystal_I2C.h>
+int lcdColumns = 16;
+int lcdRows = 2;
+LiquidCrystal_I2C lcd (0x27, lcdColumns, lcdRows);
+
+
+#define DHTPIN 4  // Digital pin connected to the DHT sensor
+
+// Uncomment whatever type you're using!
+#define DHTTYPE DHT22   // DHT 22 (AM2302)
+
+// Initialize DHT sensor.
+DHT dht(DHTPIN, DHTTYPE);
+
+void setup() {
+  
+  lcd.init();
+  lcd.backlight();
+
+
+  dht.begin();
+}
+
+void loop() {
+  // Wait a few seconds between measurements.
+  delay(2000);
+
+  // Reading temperature or humidity takes about 250 milliseconds!
+  float humidity = dht.readHumidity();
+  // Read temperature as Celsius (the default)
+  float temperature = dht.readTemperature();
+  // Read temperature as Fahrenheit (isFahrenheit = true)
+  float fahrenheit = dht.readTemperature(true);
+
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(humidity) || isnan(temperature) || isnan(fahrenheit)) {
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
+  }
+
+   for ( int i = 0;  i< 16; i++) 
+   {
+    lcd.clear();
+    lcd.setCursor(i, 0);
+  lcd.print(String(humidity) + "%");
+  delay(200);
+  lcd.clear();
+
+   }
+   for ( int i = 0;  i< 16; i++) 
+   {
+    lcd.clear();
+    lcd.setCursor(i, 0);
+
+  
+  lcd.print( String(temperature)+ "c");
+  delay(200);
+  lcd.clear();
+   }
+   for ( int i = 0;  i< 16; i++) 
+   {
+    lcd.clear();
+    lcd.setCursor(i, 0);
+  lcd.print( String(fahrenheit)+ "f");
+  delay(200);
+  lcd.clear();
+   }
+  
+}
+
+
+
+  
+
